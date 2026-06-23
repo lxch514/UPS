@@ -20,11 +20,9 @@ using namespace std;
 // ============================================================
 class LWK7575 {
 public:
-    // 构造函数
     LWK7575(const string& port, uint8_t slave_id = 0x01)
         : port_(port), slave_id_(slave_id), fd_(-1) {}
 
-    // 析构函数
     ~LWK7575() {
         if (fd_ >= 0) {
             close(fd_);
@@ -35,13 +33,13 @@ public:
     bool init(int baudrate = 9600) {
         fd_ = open(port_.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
         if (fd_ < 0) {
-            cerr << "[错误] 打开串口失败: " << port_ << endl;
+            cerr << "打开串口失败: " << port_ << endl;
             return false;
         }
 
         struct termios options;
         if (tcgetattr(fd_, &options) != 0) {
-            cerr << "[错误] 获取串口属性失败" << endl;
+            cerr << "获取串口属性失败" << endl;
             return false;
         }
 
@@ -74,20 +72,20 @@ public:
         options.c_cc[VTIME] = 100;
 
         if (tcsetattr(fd_, TCSANOW, &options) != 0) {
-            cerr << "[错误] 设置串口属性失败" << endl;
+            cerr << "设置串口属性失败" << endl;
             return false;
         }
 
         tcflush(fd_, TCIOFLUSH);
-        cout << "[OK] 串口初始化成功: " << port_ << " @ " << baudrate << " bps" << endl;
-        cout << "[OK] 从机地址: 0x" << hex << (int)slave_id_ << dec << endl;
+        cout << "串口初始化成功: " << port_ << " @ " << baudrate << " bps" << endl;
+        cout << "从机地址: 0x" << hex << (int)slave_id_ << dec << endl;
         return true;
     }
 
     // ========== 配对从机 ==========
     bool pairSlave(uint8_t new_address) {
-        cout << "\n[配对] 正在配对，新地址: 0x" << hex << (int)new_address << dec << endl;
-        cout << "[配对] 请确保驱动板已长按按键进入配对模式（绿灯闪烁）" << endl;
+        cout << "\n正在配对，新地址: 0x" << hex << (int)new_address << dec << endl;
+        cout << "请确保驱动板已长按按键进入配对模式" << endl;
 
         uint8_t old_slave = slave_id_;
         slave_id_ = 0xC8;
@@ -97,10 +95,10 @@ public:
         slave_id_ = old_slave;
 
         if (result) {
-            cout << "[OK] 配对成功！从机地址: 0x" << hex << (int)new_address << dec << endl;
+            cout << "配对成功！从机地址: 0x" << hex << (int)new_address << dec << endl;
             slave_id_ = new_address;
         } else {
-            cout << "[失败] 配对失败，请检查连接和配对模式" << endl;
+            cout << "配对失败，请检查连接和配对模式" << endl;
         }
 
         return result;
@@ -318,7 +316,7 @@ private:
         return crc;
     }
 
-    // ========== 串口读写 ==========
+    // ========== 串口操作 ==========
     bool writeData(const vector<uint8_t>& data) {
         if (fd_ < 0) return false;
 
@@ -434,7 +432,7 @@ private:
         return 0xFFFF;
     }
 
-    // ========== 读两个连续的寄存器 (32位) ==========
+    // ========== 读两个连续的寄存器 ==========
     uint32_t readTwoRegisters(uint16_t reg_addr) {
         vector<uint8_t> frame;
         frame.push_back(slave_id_);
@@ -486,11 +484,10 @@ void showHelp(const char* program_name) {
 // ============================================================
 int main(int argc, char* argv[]) {
     cout << "\n╔══════════════════════════════════════╗" << endl;
-    cout << "║      LWK7575 鼓风机控制程序         ║" << endl;
-    cout << "║      test_7575 v1.0                  ║" << endl;
+    cout << "║      LWK7575 鼓风机控制程序           ║" << endl;
     cout << "╚══════════════════════════════════════╝\n" << endl;
 
-    // 参数解析 - 默认使用 /dev/ttyS0
+    // 参数解析 - 使用 /dev/ttyS0串口
     string port = "/dev/ttyS0";
     uint8_t slave_id = 0x01;
 
