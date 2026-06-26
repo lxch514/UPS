@@ -1,4 +1,6 @@
 // BLR-4000-485 激光测距传感器
+// 编译: g++ -std=c++11 -o BLR_4000 BLR_4000.cpp -lpthread
+// 运行: ./BLR_4000 
 
 #include <iostream>
 #include <string>
@@ -21,7 +23,7 @@ public:
 
     bool open(const std::string& port, uint32_t baudrate) {
         fd_ = ::open(port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
-        if (fd_ < 0) {
+        if (fd_ < 0) {            
             std::cerr << "Failed to open " << port << ": " << strerror(errno) << std::endl;
             return false;
         }

@@ -1,4 +1,6 @@
 // 双串口独立读取程序：BLR-4000 (ttyS0) + SINDT-485 (ttyS1)
+// 编译: g++ -std=c++11 -o BLR_SINDT_dual BLR_SINDT_dual.cpp -lpthread
+// 运行: ./BLR_SINDT_dual
 
 #include <iostream>
 #include <string>
