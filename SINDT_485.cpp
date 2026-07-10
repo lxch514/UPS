@@ -1,5 +1,8 @@
 // SINDT-485 三维运动姿态测量系统 
 // 功能: 角度、经纬度、原点经纬度、距离、定位状态
+// 编译: g++ -std=c++11 -o SINDT_485 SINDT_485.cpp -lpthread
+// 运行: ./SINDT_485 
+
 
 #include <iostream>
 #include <string>

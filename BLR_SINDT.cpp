@@ -1,5 +1,6 @@
 // BLR-4000 (测距) + SINDT-485 (姿态/GPS)
-
+// 编译：g++ -std=c++11 -o BLR_SINDT BLR_SINDT.cpp -lpthread
+// 运行：./BLR_SINDT
 
 #include <iostream>
 #include <string>
